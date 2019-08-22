@@ -1,0 +1,26 @@
+{
+  "required_api_version": "^2.0.0",
+  "name": "Better file browser",
+  "description": "A nicer file browser, easier to navigate and with ability to open folders too",
+  "developer_name": "Fisa (Juan Pedro Fisanotti)",
+  "icon": "images/icon.png",
+  "options": {
+    "query_debounce": 0.1
+  },
+  "preferences": [
+    {
+      "id": "fb_kw",
+      "type": "keyword",
+      "name": "File browser",
+      "description": "",
+      "default_value": "f"
+    },
+    {
+      "id": "fb_default_path",
+      "type": "input",
+      "name": "File browser default path",
+      "description": "The file browser will always start positioned in this path.",
+      "default_value": "~"
+    }
+  ]
+}
