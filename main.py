@@ -23,12 +23,19 @@ except:
 
 DEFAULT_FILE_ICON = "images/default_file.png"
 DEFAULT_FOLDER_ICON = "images/default_folder.png"
+IMAGE_EXTENSIONS = (
+    '.png',
+    '.jpg', '.jpeg',
+)
 
 
 def get_icon_for_file(path, size=256):
     """
     Get the gtk icon path for a specific file or folder (defined by its path).
     """
+    if path.name.lower().endswith(IMAGE_EXTENSIONS):
+        return str(path)
+
     if Gtk is not None:
         try:
             if path.is_dir():
