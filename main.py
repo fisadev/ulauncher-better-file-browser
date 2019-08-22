@@ -5,14 +5,11 @@ from ulauncher.api.client.Extension import Extension
 from ulauncher.api.client.EventListener import EventListener
 from ulauncher.api.shared.event import (
     KeywordQueryEvent,
-    ItemEnterEvent,
     PreferencesEvent,
     PreferencesUpdateEvent,
 )
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
-from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
-from ulauncher.api.shared.action.ExtensionCustomAction import ExtensionCustomAction
 from ulauncher.api.shared.action.SetUserQueryAction import SetUserQueryAction
 from ulauncher.api.shared.action.OpenAction import OpenAction
 
@@ -32,19 +29,20 @@ def get_icon_for_file(path, size=256):
     """
     Get the gtk icon path for a specific file or folder (defined by its path).
     """
-    try:
-        if path.is_dir():
-            icon = Gio.content_type_get_icon("folder")
-        else:
-            mimetype = Gio.content_type_guess(path.name)[0]
-            icon = Gio.content_type_get_icon(mimetype)
+    if Gtk is not None:
+        try:
+            if path.is_dir():
+                icon = Gio.content_type_get_icon("folder")
+            else:
+                mimetype = Gio.content_type_guess(path.name)[0]
+                icon = Gio.content_type_get_icon(mimetype)
 
-        theme = Gtk.IconTheme.get_default()
-        actual_icon = theme.choose_icon(icon.get_names(), size, 0)
-        if actual_icon:
-            return actual_icon.get_filename()
-    except Exception as err:
-        logger.exception("Failed to get icon for path: %s", path)
+            theme = Gtk.IconTheme.get_default()
+            actual_icon = theme.choose_icon(icon.get_names(), size, 0)
+            if actual_icon:
+                return actual_icon.get_filename()
+        except Exception:
+            logger.exception("Failed to get icon for path: %s", path)
 
     if path.is_dir():
         return DEFAULT_FOLDER_ICON
@@ -102,8 +100,6 @@ class PreferencesEventListener(EventListener):
             extension.preferences = event.preferences
         else:
             extension.preferences[event.id] = event.new_value
-
-        return None
 
 
 class KeywordQueryEventListener(EventListener):
