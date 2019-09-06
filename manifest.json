@@ -1,7 +1,7 @@
 {
   "required_api_version": "^2.0.0",
   "name": "Better file browser",
-  "description": "A nicer file browser, easier to navigate and with ability to open folders too",
+  "description": "A nicer file browser, easier to navigate and with ability to open folders too. You can limit how many results to show, and wheter to show hidden files or not.",
   "developer_name": "Fisa (Juan Pedro Fisanotti)",
   "icon": "images/icon.png",
   "options": {
@@ -11,16 +11,34 @@
     {
       "id": "fb_kw",
       "type": "keyword",
-      "name": "File browser",
+      "name": "File browser shortcut",
       "description": "",
       "default_value": "f"
     },
     {
       "id": "fb_default_path",
       "type": "input",
-      "name": "File browser default path",
+      "name": "Default path",
       "description": "The file browser will always start positioned in this path.",
       "default_value": "~"
+    },
+    {
+      "id": "fb_items_limit",
+      "type": "input",
+      "name": "Items limit",
+      "description": "The file browser will show up to this number of items in the list. Leave empty for no limit.",
+      "default_value": ""
+    },
+    {
+      "id": "fb_show_hidden",
+      "type": "select",
+      "name": "Show hidden files",
+      "description": "Show hidden files in the list (files and folders with names starting in '.')",
+      "default_value": "No",
+      "options": [
+        {"value": "Yes", "text": "Yes"},
+        {"value": "No", "text": "No"}
+      ]
     }
   ]
 }

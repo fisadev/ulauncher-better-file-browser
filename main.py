@@ -142,24 +142,40 @@ class KeywordQueryEventListener(EventListener):
             items.append(item)
 
         # children items, filtered, and folders first
-        sorted_children = sorted(
+        sorted_children = list(sorted(
             current_path.iterdir(),
             key=lambda child_path: (not child_path.is_dir(), child_path.name),
-        )
-        # show each one of them
-        for child_path in sorted_children:
-            if matches_filter(child_path.name, current_filter):
-                if child_path.is_dir():
-                    item_action = SetUserQueryAction("{} {}/".format(keyword, str(child_path)))
-                else:
-                    item_action = OpenAction(str(child_path))
+        ))
 
-                item = ExtensionResultItem(
-                    icon=get_icon_for_file(child_path),
-                    name=child_path.name,
-                    on_enter=item_action,
-                )
-                items.append(item)
+        items_limit = extension.preferences.get('fb_items_limit')
+        if items_limit is not None:
+            try:
+                items_limit = int(items_limit)
+            except ValueError:
+                pass
+
+        show_hidden = extension.preferences.get('fb_show_hidden') == 'Yes'
+
+        # show each one of them
+        items_count = 0
+        for child_path in sorted_children:
+            if show_hidden or not child_path.name.startswith('.'):
+                if matches_filter(child_path.name, current_filter):
+                    if child_path.is_dir():
+                        item_action = SetUserQueryAction("{} {}/".format(keyword, str(child_path)))
+                    else:
+                        item_action = OpenAction(str(child_path))
+
+                    item = ExtensionResultItem(
+                        icon=get_icon_for_file(child_path),
+                        name=child_path.name,
+                        on_enter=item_action,
+                    )
+                    items.append(item)
+
+                    items_count += 1
+                    if items_limit is not None and items_count == items_limit:
+                        break
 
         return RenderResultListAction(items)
 
